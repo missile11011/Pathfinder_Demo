@@ -1,4 +1,9 @@
 .node {
-  width: 30px;
-  padding-top: 30px;
+  width: 2vw;
+  height: 2vw;
 }
+.node-row{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start
+    }

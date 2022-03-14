@@ -6,7 +6,7 @@ const Grid = () =>{
     const grid = [];
     for (let row = 0; row < 20; row++) {
       const currentRow = [];
-      for (let col = 0; col < 30; col++){
+      for (let col = 0; col < 50; col++){
         currentRow.push(col)
       }
       grid.push(currentRow)
@@ -15,20 +15,22 @@ const Grid = () =>{
   }
   const grid = getGrid();
   return(
-    <div class='container border border-dark'>
+    <div class="p-3">
+      <div class= "border border-dark">
       {grid.map((row, rowIndex) => {
         return (
-          <div class="row" key={rowIndex}>
+          <span class="node-row overflow-hidden" key={rowIndex}>
             {row.map((col, colIndex) => {
               return(
-                <div class="col border border-dark node">
+                <div class="border border-dark node" key={colIndex}>
                   
                 </div>
               )
             })}
-          </div>
+          </span>
           )
         })}
+        </div>
     </div>
   )
 }
