@@ -1,9 +1,21 @@
 .node {
-  width: 2vw;
-  height: 2vw;
+	width: 1.95vw;
+	height: 1.9vw;
 }
-.node-row{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start
-    }
+.node-row {
+	display: flex;
+	flex-direction: row;
+
+}
+.wall {
+	background-color: black;
+}
+.weight {
+	background-color: #00a3ff;
+}
+.start {
+	background-color: #00a300;
+}
+.finish {
+	background-color: #a30000;
+}
