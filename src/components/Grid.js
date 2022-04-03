@@ -1,27 +1,34 @@
 import React, {useEffect, useState} from "react";
 import Node from "./Node.js";
 import {useDispatch, useSelector} from "react-redux";
-import {UPDATE_STATE_CHANGE} from "../utils/actions.js";
+import {UPDATE_GRID, UPDATE_STATE_CHANGE} from "../utils/actions.js";
 import "./node.css";
+import {
+	dijkstra,
+	getNodesInShortestPathOrder,
+} from "../utils/algorithms/dijkstra.js";
 
 const Grid = () => {
-	const [nodeState] = useState("");
+	//const [nodeState] = useState("");
+	const [grid, setGrid] = useState([]);
 	const dispatch = useDispatch();
 	const state = useSelector((state) => state);
+	const {startNode, finishNode, stateChange} = state;
 
 	useEffect(() => {
-		// const [startRow, startCol] = startNode;
-		// const nodeElement = document.getElementById(`node-${row}-${col}`)
-		// nodeElement.setAttribute("nodestate", "start")
-		// console.log(nodeElement)
+		initGrid();
 	}, []);
+
 	const initNode = (row, col) => {
 		return {
 			row,
 			col,
+			distance: Infinity,
+			previousNode: null,
+			state: "none",
 		};
 	};
-	const getGrid = () => {
+	const initGrid = () => {
 		const grid = [];
 		for (let row = 0; row < 20; row++) {
 			const currentRow = [];
@@ -30,8 +37,18 @@ const Grid = () => {
 			}
 			grid.push(currentRow);
 		}
-		return grid;
+		setGrid(grid);
 	};
+
+	const changeGrid = (grid, row, col) => {
+		grid[row][col].state = stateChange;
+	};
+
+	const runDijkstra = () => {
+		const dijkstraGrid = dijkstra(grid, startNode, finishNode);
+		dispatch({type: UPDATE_STATE_CHANGE, stateChange: stateChange});
+	};
+
 	const changeState = (e) => {
 		switch (e.target.id) {
 			case "weight-btn":
@@ -58,12 +75,15 @@ const Grid = () => {
 					stateChange: "finish",
 				});
 				return;
+			case "clear-btn":
+				dispatch({
+					type: UPDATE_STATE_CHANGE,
+					stateChange: "none",
+				});
 			default:
 				return "";
 		}
 	};
-	const grid = getGrid();
-
 	return (
 		<div className="p-3">
 			<button
@@ -94,6 +114,20 @@ const Grid = () => {
 			>
 				weight
 			</button>
+			<button
+				id="clear-btn"
+				className="btn btn-outline-danger m-2"
+				onClick={changeState}
+			>
+				delete
+			</button>
+			<button
+				id="run-button"
+				className="btn btn-outline-success m-2"
+				onClick={runDijkstra}
+			>
+				Run
+			</button>
 
 			<div className="">
 				{grid.map((row, rowIndex) => {
@@ -103,19 +137,21 @@ const Grid = () => {
 							key={rowIndex}
 						>
 							{row.map((node, colIndex) => {
-								const {row, col, isStart} = node;
+								const {row, col, state} = node;
 								return (
 									<div
 										id={`div-${rowIndex}-${colIndex}`}
 										key={`${rowIndex}-${colIndex}`}
-										className=""
+										className={state}
+										onClick={(e) => {
+											changeGrid(grid, row, col);
+										}}
 									>
 										<Node
-											nodestate={nodeState}
+											nodestate={state}
 											key={colIndex}
 											col={col}
 											row={row}
-											isStart={isStart}
 										></Node>
 									</div>
 								);

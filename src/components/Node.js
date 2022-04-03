@@ -11,42 +11,39 @@ const Node = (props) => {
 	const {row, col, nodestate} = props;
 	useEffect(() => {
 		if (nodeState === "start") {
-			setNodeState("");
+			setNodeState("none");
 		}
 		if (nodeState === "finish") {
-			setNodeState("");
+			setNodeState("none");
 		}
-		if (startNode[0] === row && startNode[1] === col) {
-			console.log("is start", row, col);
+		if (startNode.row === row && startNode.col === col) {
 			setNodeState("start");
 		}
-		if (finishNode[0] === row && finishNode[1] === col) {
+		if (finishNode.row === row && finishNode.col === col) {
 			setNodeState("finish");
-			console.log("is finish", row, col);
 		}
-	}, [startNode, finishNode]);
+	}, [startNode, finishNode, nodestate]);
 
 	const handelClick = () => {
 		if (stateChange === "start") {
 			dispatch({
 				type: SET_START_NODE,
-				startNode: [row, col],
+				startNode: {row: row, col: col, distance: 0},
 			});
 		} else if (stateChange === "finish") {
 			dispatch({
 				type: SET_FINISH_NODE,
-				finishNode: [row, col],
+				finishNode: {row: row, col: col},
 			});
 		} else {
 			setNodeState(stateChange);
 		}
 	};
-
 	return (
 		<div
 			className={`border border-dark node ${nodeState}`}
-			id={`node-${props.row}-${props.col}`}
-			nodestate={nodestate}
+			id={`node-${row}-${col}`}
+			nodestate={nodeState}
 			row={row}
 			col={col}
 			onClick={handelClick}
