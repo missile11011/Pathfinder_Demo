@@ -9,7 +9,6 @@ import {
 } from "../utils/algorithms/dijkstra.js";
 
 const Grid = () => {
-	//const [nodeState] = useState("");
 	const [grid, setGrid] = useState([]);
 	const dispatch = useDispatch();
 	const state = useSelector((state) => state);
@@ -37,6 +36,8 @@ const Grid = () => {
 			}
 			grid.push(currentRow);
 		}
+		dispatch({type: UPDATE_STATE_CHANGE,
+		stateChange: "none"})
 		setGrid(grid);
 	};
 
@@ -47,6 +48,18 @@ const Grid = () => {
 	const runDijkstra = () => {
 		const dijkstraGrid = dijkstra(grid, startNode, finishNode);
 		dispatch({type: UPDATE_STATE_CHANGE, stateChange: stateChange});
+		const shortestPath = getNodesInShortestPathOrder(
+			dijkstraGrid,
+			finishNode
+		);
+		for (let i = 0; i < shortestPath.length; i++) {
+			const row = shortestPath[i].row
+			const col = shortestPath[i].col
+			document.getElementById(`node-${row}-${col}`).className = "border border-dark node path"
+			
+		}
+		
+		return grid;
 	};
 
 	const changeState = (e) => {
@@ -75,7 +88,7 @@ const Grid = () => {
 					stateChange: "finish",
 				});
 				return;
-			case "clear-btn":
+			case "delete-btn":
 				dispatch({
 					type: UPDATE_STATE_CHANGE,
 					stateChange: "none",
@@ -114,8 +127,11 @@ const Grid = () => {
 			>
 				weight
 			</button>
+			<button id="clear-btn" className="btn btn-outline-danger m-2" onClick={initGrid}>
+				clear all
+			</button>
 			<button
-				id="clear-btn"
+				id="delete-btn"
 				className="btn btn-outline-danger m-2"
 				onClick={changeState}
 			>
@@ -137,7 +153,7 @@ const Grid = () => {
 							key={rowIndex}
 						>
 							{row.map((node, colIndex) => {
-								const {row, col, state} = node;
+								const {row, col, state, distance} = node;
 								return (
 									<div
 										id={`div-${rowIndex}-${colIndex}`}
@@ -152,6 +168,7 @@ const Grid = () => {
 											key={colIndex}
 											col={col}
 											row={row}
+											distance={distance}
 										></Node>
 									</div>
 								);

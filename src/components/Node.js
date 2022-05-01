@@ -2,13 +2,13 @@ import React, {useState, useEffect} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import {SET_START_NODE, SET_FINISH_NODE} from "../utils/actions";
 import "./node.css";
-// import { handelClick } from "./Grid"
+
 const Node = (props) => {
 	const [nodeState, setNodeState] = useState("");
 	const dispatch = useDispatch();
 	const state = useSelector((state) => state);
 	const {stateChange, startNode, finishNode} = state;
-	const {row, col, nodestate} = props;
+	const {row, col, nodestate, distance} = props;
 	useEffect(() => {
 		if (nodeState === "start") {
 			setNodeState("none");
