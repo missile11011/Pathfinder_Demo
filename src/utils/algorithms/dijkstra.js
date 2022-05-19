@@ -3,19 +3,25 @@ export function dijkstra(grid, startNode, finishNode) {
 	// startNode.distance = 0;
 	grid[startNode.row][startNode.col].distance = 0;
 	const unvisitedNodes = getAllNodes(grid);
-	console.log(unvisitedNodes);
 	while (!!unvisitedNodes.length) {
 		sortNodesByDistance(unvisitedNodes);
 		const closestNode = unvisitedNodes.shift();
 		if (closestNode.state === "wall") continue;
 		if (closestNode.distance === Infinity) return visitedNodesInOrder;
-		closestNode.state = "visited";
+		
 		visitedNodesInOrder.push(closestNode);
 		if (closestNode === grid[finishNode.row][finishNode.col])
 			return visitedNodesInOrder;
 		updateUnvisitedNeighbors(closestNode, grid);
+		// return visitedNodesInOrder
+		// return visitedNodesInOrder
 	}
-	return grid;
+	// visitedNodesInOrder.map((visitedNode, nodeIndex)=>{
+	// 	setInterval(() => {
+	// 		visitedNode.state = "visited"	
+	// 	},nodeIndex * 100);
+	// })
+	return visitedNodesInOrder;
 }
 
 function sortNodesByDistance(unvisitedNodes) {
@@ -55,12 +61,12 @@ function getAllNodes(grid) {
 function finishNodeNeighbor(grid, currentNode) {
 	const neighborNode = [];
 	for (let i = 0; i < grid.length; i++) {
-		console.log(grid[i]);
+		// console.log(grid[i]);
 		if (
 			grid[i].col === currentNode.col - 1 &&
 			grid[i].row === currentNode.row
 		) {
-			console.log("test");
+			// console.log("test");
 			neighborNode.push(grid[i]);
 		}
 		if (
@@ -81,7 +87,7 @@ function finishNodeNeighbor(grid, currentNode) {
 		) {
 			neighborNode.push(grid[i]);
 		}
-		console.log(neighborNode);
+		// console.log(neighborNode);
 	}
 	return neighborNode;
 }
@@ -98,13 +104,14 @@ export function getNodesInShortestPathOrder(grid, finishNode) {
 
 	while (currentNode !== null) {
 		const neighborNode = finishNodeNeighbor(allNodes, currentNode);
-		console.log("currentNode", currentNode);
-		console.log("neighbor", neighborNode);
+		// console.log("currentNode", currentNode);
+		// console.log("neighbor", neighborNode);
 		for (let i = 0; i < neighborNode.length; i++) {
 			if (neighborNode[i].distance < currentNode.distance) {
 				nodesInShortestPathOrder.push(neighborNode[i]);
 				currentNode = neighborNode[i];
-				console.log("less than", neighborNode[i].distance);
+				// console.log("less than", neighborNode[i].distance);
+				currentNode.state = "path"
 			}
 		}
 		if (currentNode.distance === 1) {

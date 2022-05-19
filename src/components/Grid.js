@@ -36,8 +36,7 @@ const Grid = () => {
 			}
 			grid.push(currentRow);
 		}
-		dispatch({type: UPDATE_STATE_CHANGE,
-		stateChange: "none"})
+		dispatch({type: UPDATE_STATE_CHANGE, stateChange: "none"});
 		setGrid(grid);
 	};
 
@@ -47,18 +46,26 @@ const Grid = () => {
 
 	const runDijkstra = () => {
 		const dijkstraGrid = dijkstra(grid, startNode, finishNode);
+		dijkstraGrid.map((visitedNode, nodeIndex) => {
+			// if (visitedNode !== "visited") {
+				console.log(visitedNode)
+				// setInterval(() => {
+					let row = visitedNode.row
+					let col = visitedNode.col
+					let node = document.getElementById(`node-${row}-${col}`)
+					
+					node.nodestate = "visited";
+					console.log(node)
+				// }, nodeIndex * 10);
+			// }
+		});
+
 		dispatch({type: UPDATE_STATE_CHANGE, stateChange: stateChange});
 		const shortestPath = getNodesInShortestPathOrder(
 			dijkstraGrid,
 			finishNode
 		);
-		for (let i = 0; i < shortestPath.length; i++) {
-			const row = shortestPath[i].row
-			const col = shortestPath[i].col
-			document.getElementById(`node-${row}-${col}`).className = "border border-dark node path"
-			
-		}
-		
+		console.log(dijkstraGrid);
 		return grid;
 	};
 
@@ -127,7 +134,11 @@ const Grid = () => {
 			>
 				weight
 			</button>
-			<button id="clear-btn" className="btn btn-outline-danger m-2" onClick={initGrid}>
+			<button
+				id="clear-btn"
+				className="btn btn-outline-danger m-2"
+				onClick={initGrid}
+			>
 				clear all
 			</button>
 			<button
